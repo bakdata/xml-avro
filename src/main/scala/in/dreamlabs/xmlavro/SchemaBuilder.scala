@@ -7,19 +7,10 @@ import org.apache.avro.Schema
 import org.apache.avro.Schema.Field
 import org.apache.xerces.dom.DOMInputImpl
 import org.apache.xerces.impl.Constants
-import org.apache.xerces.impl.xs.{
-  SchemaGrammar,
-  XMLSchemaLoader,
-  XSComplexTypeDecl
-}
+import org.apache.xerces.impl.xs.{SchemaGrammar, XMLSchemaLoader, XSComplexTypeDecl}
 import org.apache.xerces.xni.parser.{XMLEntityResolver, XMLInputSource}
 import org.apache.xerces.xni.{XMLResourceIdentifier, XNIException}
-import org.apache.xerces.xs.XSConstants.{
-  ATTRIBUTE_DECLARATION,
-  ELEMENT_DECLARATION,
-  MODEL_GROUP,
-  WILDCARD
-}
+import org.apache.xerces.xs.XSConstants.{ATTRIBUTE_DECLARATION, ELEMENT_DECLARATION, MODEL_GROUP, WILDCARD}
 import org.apache.xerces.xs.XSTypeDefinition.{COMPLEX_TYPE, SIMPLE_TYPE}
 import org.apache.xerces.xs._
 
@@ -45,6 +36,17 @@ final class SchemaBuilder(config: XSDConfig) {
   if (stringTimestamp)
     SchemaBuilder.PRIMITIVES += XSConstants.DATETIME_DT -> Schema.Type.STRING
 
+  def addTransitiveRecordTypes(s: Schema, records: mutable.Set[String]): collection.Set[String] = {
+     s.getType match {
+       case Schema.Type.RECORD if records.add(s.getFullName) => for(f <- s.getFields.asScala) addTransitiveRecordTypes(f.schema(), records)
+       case Schema.Type.ARRAY => addTransitiveRecordTypes(s.getElementType, records)
+       case Schema.Type.MAP => addTransitiveRecordTypes(s.getValueType, records)
+       case Schema.Type.UNION => for(t <- s.getTypes.asScala) addTransitiveRecordTypes(t, records)
+       case _ =>
+     }
+     records
+  }
+
   def createSchema(): Unit = {
     val errorHandler = new XSDErrorHandler
     val xsdIn = xsdFile.toFile.bufferedInput
@@ -62,44 +64,56 @@ final class SchemaBuilder(config: XSDConfig) {
     errorHandler check ()
 
     // Generate schema for all the elements
-    val schema = {
-      val tempSchemas = mutable.LinkedHashMap[XSObject, Schema]()
-      val elements: XSNamedMap =
-        model.getComponents(XSConstants ELEMENT_DECLARATION)
-      for ((_, ele: XSElementDeclaration) <- elements.asScala) {
+    val tempSchemas =
+      model.getComponents(XSConstants ELEMENT_DECLARATION).asScala.values.map { case ele: XSElementDeclaration =>
         debug(s"Processing root element ${XNode(ele) toString}")
-        tempSchemas += ele -> processType(ele.getTypeDefinition,
-                                          optional = false,
-                                          array = false)
+        ele -> processType(ele.getTypeDefinition,
+          optional = false,
+          array = false)
       }
 
-      if (tempSchemas isEmpty)
-        throw ConversionException("No root element declaration found")
-
-      // Create root record from the schemas generated
-      if (tempSchemas.size == 1) tempSchemas.valuesIterator.next()
-      else {
-        val nullSchema = Schema.create(Schema.Type.NULL)
-        val fields = mutable.ListBuffer[Field]()
-        for ((ele, record) <- tempSchemas) {
-          val optionalSchema = Schema createUnion List[Schema](nullSchema,
-                                                               record).asJava
-          val field =
-            new Field(validName(ele.getName).get, optionalSchema, null, null)
-          field.addProp(XNode.SOURCE, XNode(ele).source)
-          fields += field
-        }
-        val record = Schema.createRecord(generateTypeName, null, null, false)
-        record.setFields(fields.asJava)
-        record.addProp(XNode.SOURCE, XNode.DOCUMENT)
-        record
-      }
+    val reachableRecords = tempSchemas.map { case (ele, schema) => addTransitiveRecordTypes(schema, mutable.HashSet[String]()) }
+    val rootRecords = tempSchemas.filter { case (ele, schema) =>
+      reachableRecords.count(records => records.contains(schema.getFullName)) <= 1
     }
 
-    // Write the schema output
-    val avscOut = avscFile.toFile.bufferedOutput()
-    avscOut write schema.toString(true).getBytes()
-    avscOut close ()
+    if (rootRecords isEmpty)
+      throw ConversionException("No root element declaration found")
+
+    // Create root record from the schemas generated
+    if (config.splitSeparateRoots) {
+      for ((ele, schema) <- rootRecords) {
+        // Write the schema output
+        val avscOut = (avscFile.parent / s"${avscFile.stripExtension}_${ele.getName}.${avscFile.extension}").toFile.bufferedOutput()
+        avscOut write schema.toString(true).getBytes()
+        avscOut close ()
+      }
+    }
+    else {
+      val schema =
+        if (rootRecords.size == 1) rootRecords.iterator.next()._2
+        else {
+          val nullSchema = Schema.create(Schema.Type.NULL)
+          val fields = mutable.ListBuffer[Field]()
+          for ((ele, record) <- rootRecords) {
+            val optionalSchema = Schema createUnion List[Schema](nullSchema,
+              record).asJava
+            val field =
+              new Field(validName(ele.getName).get, optionalSchema, null, null)
+            field.addProp(XNode.SOURCE, XNode(ele).source)
+            fields += field
+          }
+          val record = Schema.createRecord(generateTypeName, null, null, false)
+          record.setFields(fields.asJava)
+          record.addProp(XNode.SOURCE, XNode.DOCUMENT)
+          record
+        }
+      // Write the schema output
+      val avscOut = avscFile.toFile.bufferedOutput()
+      avscOut write schema.toString(true).getBytes()
+      avscOut close ()
+    }
+
   }
 
   private def processType(eleType: XSTypeDefinition,
@@ -226,6 +240,18 @@ final class SchemaBuilder(config: XSDConfig) {
     fields
   }
 
+  private def processMixedType(
+      complexType: XSComplexTypeDefinition): mutable.Map[String, Field] = {
+    val fields = mutable.LinkedHashMap[String, Field]()
+
+    if (complexType.getContentType == XSComplexTypeDefinition.CONTENTTYPE_MIXED) {
+      val field = new Field(XNode.TEXT_VALUE, Schema.create(Schema.Type.STRING), null, null)
+      field.addProp(XNode.SOURCE, XNode.textNode.source)
+      fields += (field.name() -> field)
+    }
+    fields
+  }
+
   private def processParticle(
       complexType: XSComplexTypeDefinition): mutable.Map[String, Field] = {
     val fields = mutable.LinkedHashMap[String, Field]()
@@ -241,6 +267,7 @@ final class SchemaBuilder(config: XSDConfig) {
     typeDef match {
       case complexType: XSComplexTypeDefinition =>
         updateFields(fields, processAttributes(complexType))
+        updateFields(fields, processMixedType(complexType))
         updateFields(fields, processExtension(complexType))
         updateFields(fields, processParticle(complexType))
       case complexType: XSTerm =>

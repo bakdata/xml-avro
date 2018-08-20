@@ -58,6 +58,7 @@ class XSDConfig {
   var avscFile: Path = _
   @BeanProperty var rebuildChoice: Boolean = true
   @BeanProperty var stringTimestamp: Boolean = false
+  @BeanProperty var splitSeparateRoots: Boolean = true
 
   def getXsdFile: String = xsdFile.path
 
