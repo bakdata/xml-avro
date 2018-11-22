@@ -168,6 +168,11 @@ final class SchemaBuilder(config: XSDConfig) {
           fields ++= processGroupParticle(group,
                                           innerOptional,
                                           innerArray = false)
+        else if (group.getParticles.size() == 1) {
+          fields ++= processGroupParticle(group,
+            innerOptional,
+            innerArray = true)
+        }
         else {
           val name = generateTypeName
           val groupRecord = createRecord(generateTypeName, group)
@@ -257,7 +262,8 @@ final class SchemaBuilder(config: XSDConfig) {
     val fields = mutable.LinkedHashMap[String, Field]()
     val particle = Option(complexType.getParticle)
     if (particle isDefined)
-      fields ++= processGroup(particle.get.getTerm)
+      fields ++= processGroup(particle.get.getTerm,
+        array = particle.get.getMaxOccurs > 1 || particle.get.getMaxOccursUnbounded)
     fields
   }
 
@@ -392,12 +398,14 @@ final class SchemaBuilder(config: XSDConfig) {
     @throws[XNIException]
     @throws[IOException]
     def resolveEntity(id: XMLResourceIdentifier): XMLInputSource = {
-      val fileName = id.getLiteralSystemId
-      val path = Path(fileName).toAbsoluteWithRoot(baseDir)
-      debug(s"Resolving $fileName")
       val source = new XMLInputSource(id)
-      if (path.exists)
-        source.setByteStream(path.toFile.bufferedInput())
+      val fileName = id.getLiteralSystemId
+      if(fileName != null) {
+        val path = Path(fileName).toAbsoluteWithRoot(baseDir)
+        debug(s"Resolving $fileName")
+        if (path.exists)
+          source.setByteStream(path.toFile.bufferedInput())
+      }
       source
     }
   }

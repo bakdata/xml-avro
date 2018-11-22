@@ -1,7 +1,8 @@
 package in.dreamlabs.xmlavro
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.{Calendar, TimeZone}
-import javax.xml.bind.DatatypeConverter
 
 import in.dreamlabs.xmlavro.RichAvro.{ignoreMissing, suppressWarnings}
 import in.dreamlabs.xmlavro.Utils._
@@ -241,7 +242,7 @@ object AvroUtils {
   private val TIMESTAMP_PATTERN =
     "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.*\\d*)Z?$"
 
-  var timeZone: TimeZone = TimeZone.getTimeZone("UTC-0")
+  var timeZone = TimeZone.getTimeZone("UTC-0").toZoneId
 
   def createValue(nodeType: Type, content: String): AnyRef = {
     val result = nodeType match {
@@ -259,17 +260,8 @@ object AvroUtils {
   }
 
   private def parseDateFrom(text: String): Long = {
-    var cal = DatatypeConverter.parseDateTime(text)
-    if (text matches TIMESTAMP_PATTERN)
-      cal.setTimeZone(timeZone)
-    cal.getTimeInMillis
-    //Local
-    val tsp =
-      if (!text.matches(TIMESTAMP_PATTERN)) text.substring(0, 19)
-      else text
-    cal = DatatypeConverter.parseDateTime(tsp)
-    cal.setTimeZone(timeZone)
-    cal.getTimeInMillis
+    var dateTime = LocalDateTime.parse(text, DateTimeFormatter.ISO_DATE_TIME)
+    dateTime.atZone(timeZone).toInstant.toEpochMilli
   }
 }
 
