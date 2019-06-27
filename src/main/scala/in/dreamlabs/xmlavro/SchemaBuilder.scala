@@ -285,8 +285,17 @@ final class SchemaBuilder(config: XSDConfig) {
   // Checks if the new set of fields are already existing and generates a new name for duplicate fields
   private def updateFields(originalFields: mutable.Map[String, Field],
                            newField: mutable.Map[String, Field]) = {
-    //TODO make it unique
-    originalFields ++= newField
+    for ((name, field) <- newField) {
+      originalFields.contains(name) match {
+        case false =>
+          originalFields(name) = field
+        case true =>
+          val newName = Stream.from(2).map(name + _).find(!originalFields.contains(_)).get
+          val renamedField = new Field(newName, field.schema(), field.doc(), field.defaultValue(), field.order())
+          field.getJsonProps.forEach((key, value) => renamedField.addProp(key, value))
+          originalFields(newName) = renamedField
+      }
+    }
   }
 
   // Create field for an element

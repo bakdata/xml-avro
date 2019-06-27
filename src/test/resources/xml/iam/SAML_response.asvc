@@ -4,27 +4,27 @@
   "fields" : [ {
     "name" : "ID",
     "type" : "string",
-    "source" : "attribute ID"
+    "sourceDescriptor" : "attribute ID"
   }, {
     "name" : "InResponseTo",
     "type" : [ "string", "null" ],
-    "source" : "attribute InResponseTo"
+    "sourceDescriptor" : "attribute InResponseTo"
   }, {
     "name" : "Version",
     "type" : "string",
-    "source" : "attribute Version"
+    "sourceDescriptor" : "attribute Version"
   }, {
     "name" : "IssueInstant",
     "type" : "string",
-    "source" : "attribute IssueInstant"
+    "sourceDescriptor" : "attribute IssueInstant"
   }, {
     "name" : "Destination",
     "type" : [ "string", "null" ],
-    "source" : "attribute Destination"
+    "sourceDescriptor" : "attribute Destination"
   }, {
     "name" : "Consent",
     "type" : [ "string", "null" ],
-    "source" : "attribute Consent"
+    "sourceDescriptor" : "attribute Consent"
   }, {
     "name" : "Issuer",
     "type" : [ {
@@ -33,22 +33,22 @@
       "fields" : [ {
         "name" : "NameQualifier",
         "type" : [ "string", "null" ],
-        "source" : "attribute NameQualifier"
+        "sourceDescriptor" : "attribute NameQualifier"
       }, {
         "name" : "SPNameQualifier",
         "type" : [ "string", "null" ],
-        "source" : "attribute SPNameQualifier"
+        "sourceDescriptor" : "attribute SPNameQualifier"
       }, {
         "name" : "Format",
         "type" : [ "string", "null" ],
-        "source" : "attribute Format"
+        "sourceDescriptor" : "attribute Format"
       }, {
         "name" : "SPProvidedID",
         "type" : [ "string", "null" ],
-        "source" : "attribute SPProvidedID"
+        "sourceDescriptor" : "attribute SPProvidedID"
       } ]
     }, "null" ],
-    "source" : "element Issuer"
+    "sourceDescriptor" : "element Issuer"
   }, {
     "name" : "Signature",
     "type" : [ {
@@ -57,7 +57,7 @@
       "fields" : [ {
         "name" : "Id",
         "type" : [ "string", "null" ],
-        "source" : "attribute Id"
+        "sourceDescriptor" : "attribute Id"
       }, {
         "name" : "SignedInfo",
         "type" : {
@@ -66,7 +66,7 @@
           "fields" : [ {
             "name" : "Id",
             "type" : [ "string", "null" ],
-            "source" : "attribute Id"
+            "sourceDescriptor" : "attribute Id"
           }, {
             "name" : "CanonicalizationMethod",
             "type" : {
@@ -75,7 +75,7 @@
               "fields" : [ {
                 "name" : "Algorithm",
                 "type" : "string",
-                "source" : "attribute Algorithm"
+                "sourceDescriptor" : "attribute Algorithm"
               }, {
                 "name" : "others",
                 "type" : {
@@ -84,7 +84,7 @@
                 }
               } ]
             },
-            "source" : "element CanonicalizationMethod"
+            "sourceDescriptor" : "element CanonicalizationMethod"
           }, {
             "name" : "SignatureMethod",
             "type" : {
@@ -93,11 +93,11 @@
               "fields" : [ {
                 "name" : "Algorithm",
                 "type" : "string",
-                "source" : "attribute Algorithm"
+                "sourceDescriptor" : "attribute Algorithm"
               }, {
                 "name" : "HMACOutputLength",
                 "type" : [ "string", "null" ],
-                "source" : "element HMACOutputLength"
+                "sourceDescriptor" : "element HMACOutputLength"
               }, {
                 "name" : "others",
                 "type" : {
@@ -106,7 +106,7 @@
                 }
               } ]
             },
-            "source" : "element SignatureMethod"
+            "sourceDescriptor" : "element SignatureMethod"
           }, {
             "name" : "Reference",
             "type" : {
@@ -117,15 +117,15 @@
                 "fields" : [ {
                   "name" : "Id",
                   "type" : [ "string", "null" ],
-                  "source" : "attribute Id"
+                  "sourceDescriptor" : "attribute Id"
                 }, {
                   "name" : "URI",
                   "type" : [ "string", "null" ],
-                  "source" : "attribute URI"
+                  "sourceDescriptor" : "attribute URI"
                 }, {
                   "name" : "Type",
                   "type" : [ "string", "null" ],
-                  "source" : "attribute Type"
+                  "sourceDescriptor" : "attribute Type"
                 }, {
                   "name" : "Transforms",
                   "type" : [ {
@@ -141,7 +141,7 @@
                           "fields" : [ {
                             "name" : "Algorithm",
                             "type" : "string",
-                            "source" : "attribute Algorithm"
+                            "sourceDescriptor" : "attribute Algorithm"
                           }, {
                             "name" : "others",
                             "type" : {
@@ -151,14 +151,14 @@
                           }, {
                             "name" : "XPath",
                             "type" : [ "string", "null" ],
-                            "source" : "element XPath"
+                            "sourceDescriptor" : "element XPath"
                           } ]
                         }
                       },
-                      "source" : "element Transform"
+                      "sourceDescriptor" : "element Transform"
                     } ]
                   }, "null" ],
-                  "source" : "element Transforms"
+                  "sourceDescriptor" : "element Transforms"
                 }, {
                   "name" : "DigestMethod",
                   "type" : {
@@ -167,7 +167,7 @@
                     "fields" : [ {
                       "name" : "Algorithm",
                       "type" : "string",
-                      "source" : "attribute Algorithm"
+                      "sourceDescriptor" : "attribute Algorithm"
                     }, {
                       "name" : "others",
                       "type" : {
@@ -176,18 +176,18 @@
                       }
                     } ]
                   },
-                  "source" : "element DigestMethod"
+                  "sourceDescriptor" : "element DigestMethod"
                 }, {
                   "name" : "DigestValue",
                   "type" : "string",
-                  "source" : "element DigestValue"
+                  "sourceDescriptor" : "element DigestValue"
                 } ]
               }
             },
-            "source" : "element Reference"
+            "sourceDescriptor" : "element Reference"
           } ]
         },
-        "source" : "element SignedInfo"
+        "sourceDescriptor" : "element SignedInfo"
       }, {
         "name" : "SignatureValue",
         "type" : {
@@ -196,10 +196,10 @@
           "fields" : [ {
             "name" : "Id",
             "type" : [ "string", "null" ],
-            "source" : "attribute Id"
+            "sourceDescriptor" : "attribute Id"
           } ]
         },
-        "source" : "element SignatureValue"
+        "sourceDescriptor" : "element SignatureValue"
       }, {
         "name" : "KeyInfo",
         "type" : [ {
@@ -208,11 +208,11 @@
           "fields" : [ {
             "name" : "Id",
             "type" : [ "string", "null" ],
-            "source" : "attribute Id"
+            "sourceDescriptor" : "attribute Id"
           }, {
             "name" : "KeyName",
             "type" : [ "string", "null" ],
-            "source" : "element KeyName"
+            "sourceDescriptor" : "element KeyName"
           }, {
             "name" : "KeyValue",
             "type" : [ {
@@ -226,34 +226,34 @@
                   "fields" : [ {
                     "name" : "P",
                     "type" : "string",
-                    "source" : "element P"
+                    "sourceDescriptor" : "element P"
                   }, {
                     "name" : "Q",
                     "type" : "string",
-                    "source" : "element Q"
+                    "sourceDescriptor" : "element Q"
                   }, {
                     "name" : "G",
                     "type" : [ "string", "null" ],
-                    "source" : "element G"
+                    "sourceDescriptor" : "element G"
                   }, {
                     "name" : "Y",
                     "type" : "string",
-                    "source" : "element Y"
+                    "sourceDescriptor" : "element Y"
                   }, {
                     "name" : "J",
                     "type" : [ "string", "null" ],
-                    "source" : "element J"
+                    "sourceDescriptor" : "element J"
                   }, {
                     "name" : "Seed",
                     "type" : "string",
-                    "source" : "element Seed"
+                    "sourceDescriptor" : "element Seed"
                   }, {
                     "name" : "PgenCounter",
                     "type" : "string",
-                    "source" : "element PgenCounter"
+                    "sourceDescriptor" : "element PgenCounter"
                   } ]
                 }, "null" ],
-                "source" : "element DSAKeyValue"
+                "sourceDescriptor" : "element DSAKeyValue"
               }, {
                 "name" : "RSAKeyValue",
                 "type" : [ {
@@ -262,14 +262,14 @@
                   "fields" : [ {
                     "name" : "Modulus",
                     "type" : "string",
-                    "source" : "element Modulus"
+                    "sourceDescriptor" : "element Modulus"
                   }, {
                     "name" : "Exponent",
                     "type" : "string",
-                    "source" : "element Exponent"
+                    "sourceDescriptor" : "element Exponent"
                   } ]
                 }, "null" ],
-                "source" : "element RSAKeyValue"
+                "sourceDescriptor" : "element RSAKeyValue"
               }, {
                 "name" : "others",
                 "type" : {
@@ -278,7 +278,7 @@
                 }
               } ]
             }, "null" ],
-            "source" : "element KeyValue"
+            "sourceDescriptor" : "element KeyValue"
           }, {
             "name" : "RetrievalMethod",
             "type" : [ {
@@ -287,18 +287,18 @@
               "fields" : [ {
                 "name" : "URI",
                 "type" : [ "string", "null" ],
-                "source" : "attribute URI"
+                "sourceDescriptor" : "attribute URI"
               }, {
                 "name" : "Type",
                 "type" : [ "string", "null" ],
-                "source" : "attribute Type"
+                "sourceDescriptor" : "attribute Type"
               }, {
                 "name" : "Transforms",
                 "type" : [ "TransformsType", "null" ],
-                "source" : "element Transforms"
+                "sourceDescriptor" : "element Transforms"
               } ]
             }, "null" ],
-            "source" : "element RetrievalMethod"
+            "sourceDescriptor" : "element RetrievalMethod"
           }, {
             "name" : "X509Data",
             "type" : [ {
@@ -312,30 +312,30 @@
                   "fields" : [ {
                     "name" : "X509IssuerName",
                     "type" : "string",
-                    "source" : "element X509IssuerName"
+                    "sourceDescriptor" : "element X509IssuerName"
                   }, {
                     "name" : "X509SerialNumber",
                     "type" : "string",
-                    "source" : "element X509SerialNumber"
+                    "sourceDescriptor" : "element X509SerialNumber"
                   } ]
                 }, "null" ],
-                "source" : "element X509IssuerSerial"
+                "sourceDescriptor" : "element X509IssuerSerial"
               }, {
                 "name" : "X509SKI",
                 "type" : [ "string", "null" ],
-                "source" : "element X509SKI"
+                "sourceDescriptor" : "element X509SKI"
               }, {
                 "name" : "X509SubjectName",
                 "type" : [ "string", "null" ],
-                "source" : "element X509SubjectName"
+                "sourceDescriptor" : "element X509SubjectName"
               }, {
                 "name" : "X509Certificate",
                 "type" : [ "string", "null" ],
-                "source" : "element X509Certificate"
+                "sourceDescriptor" : "element X509Certificate"
               }, {
                 "name" : "X509CRL",
                 "type" : [ "string", "null" ],
-                "source" : "element X509CRL"
+                "sourceDescriptor" : "element X509CRL"
               }, {
                 "name" : "others",
                 "type" : {
@@ -344,7 +344,7 @@
                 }
               } ]
             }, "null" ],
-            "source" : "element X509Data"
+            "sourceDescriptor" : "element X509Data"
           }, {
             "name" : "PGPData",
             "type" : [ {
@@ -353,11 +353,11 @@
               "fields" : [ {
                 "name" : "PGPKeyID",
                 "type" : [ "string", "null" ],
-                "source" : "element PGPKeyID"
+                "sourceDescriptor" : "element PGPKeyID"
               }, {
                 "name" : "PGPKeyPacket0",
                 "type" : [ "string", "null" ],
-                "source" : "element PGPKeyPacket"
+                "sourceDescriptor" : "element PGPKeyPacket"
               }, {
                 "name" : "others",
                 "type" : {
@@ -366,7 +366,7 @@
                 }
               } ]
             }, "null" ],
-            "source" : "element PGPData"
+            "sourceDescriptor" : "element PGPData"
           }, {
             "name" : "SPKIData",
             "type" : [ {
@@ -375,7 +375,7 @@
               "fields" : [ {
                 "name" : "SPKISexp",
                 "type" : "string",
-                "source" : "element SPKISexp"
+                "sourceDescriptor" : "element SPKISexp"
               }, {
                 "name" : "others",
                 "type" : {
@@ -384,11 +384,11 @@
                 }
               } ]
             }, "null" ],
-            "source" : "element SPKIData"
+            "sourceDescriptor" : "element SPKIData"
           }, {
             "name" : "MgmtData",
             "type" : [ "string", "null" ],
-            "source" : "element MgmtData"
+            "sourceDescriptor" : "element MgmtData"
           }, {
             "name" : "others",
             "type" : {
@@ -397,7 +397,7 @@
             }
           } ]
         }, "null" ],
-        "source" : "element KeyInfo"
+        "sourceDescriptor" : "element KeyInfo"
       }, {
         "name" : "Object",
         "type" : {
@@ -408,15 +408,15 @@
             "fields" : [ {
               "name" : "Id",
               "type" : [ "string", "null" ],
-              "source" : "attribute Id"
+              "sourceDescriptor" : "attribute Id"
             }, {
               "name" : "MimeType",
               "type" : [ "string", "null" ],
-              "source" : "attribute MimeType"
+              "sourceDescriptor" : "attribute MimeType"
             }, {
               "name" : "Encoding",
               "type" : [ "string", "null" ],
-              "source" : "attribute Encoding"
+              "sourceDescriptor" : "attribute Encoding"
             }, {
               "name" : "others",
               "type" : {
@@ -426,10 +426,10 @@
             } ]
           }
         },
-        "source" : "element Object"
+        "sourceDescriptor" : "element Object"
       } ]
     }, "null" ],
-    "source" : "element Signature"
+    "sourceDescriptor" : "element Signature"
   }, {
     "name" : "Extensions",
     "type" : [ {
@@ -443,7 +443,7 @@
         }
       } ]
     }, "null" ],
-    "source" : "element Extensions"
+    "sourceDescriptor" : "element Extensions"
   }, {
     "name" : "Status",
     "type" : {
@@ -457,18 +457,18 @@
           "fields" : [ {
             "name" : "Value",
             "type" : "string",
-            "source" : "attribute Value"
+            "sourceDescriptor" : "attribute Value"
           }, {
             "name" : "StatusCode",
             "type" : [ "StatusCodeType", "null" ],
-            "source" : "element StatusCode"
+            "sourceDescriptor" : "element StatusCode"
           } ]
         },
-        "source" : "element StatusCode"
+        "sourceDescriptor" : "element StatusCode"
       }, {
         "name" : "StatusMessage",
         "type" : [ "string", "null" ],
-        "source" : "element StatusMessage"
+        "sourceDescriptor" : "element StatusMessage"
       }, {
         "name" : "StatusDetail",
         "type" : [ {
@@ -482,10 +482,10 @@
             }
           } ]
         }, "null" ],
-        "source" : "element StatusDetail"
+        "sourceDescriptor" : "element StatusDetail"
       } ]
     },
-    "source" : "element Status"
+    "sourceDescriptor" : "element Status"
   }, {
     "name" : "others",
     "type" : {
