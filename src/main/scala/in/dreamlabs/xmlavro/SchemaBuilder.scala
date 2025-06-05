@@ -163,7 +163,7 @@ final class SchemaBuilder(config: XSDConfig) {
                                        null,
                                        null))
         }
-      case XSModelGroup.COMPOSITOR_SEQUENCE =>
+      case XSModelGroup.COMPOSITOR_SEQUENCE | XSModelGroup.COMPOSITOR_ALL =>
         if (!array)
           fields ++= processGroupParticle(group,
                                           innerOptional,
